@@ -138,15 +138,15 @@
 
   const STYLE = {
     bgColor: '#fffff',
-    lyricsSize: 12,
+    lyricsSize: 24,
     lyricsColor: '#222222',
-    lyricsHeight: 20,
-    chordTextSize: 16,
+    lyricsHeight: 40,
+    chordTextSize: 32,
     chordTextColor: '#222222',
-    chordTextHeight: 20,
+    chordTextHeight: 40,
     chordColor: '#444444',
-    chordUnit: 12,
-    padding: 10,
+    chordUnit: 24,
+    padding: 20,
     chordSpacing: 12,
   };
 
@@ -175,6 +175,8 @@
     strokeStyle(style, width) {
       this.ctx.strokeStyle = style;
       this.ctx.strokeWidth = width | 1;
+      this.ctx.lineWidth = width | 1;
+      this.ctx.lineCap = 'round';
     }
 
     fillRect(x, y, w, h) {
@@ -216,7 +218,7 @@
     }
 
     drawChord(chord, x, y, unit) {
-      this.strokeStyle(STYLE.chordColor);
+      this.strokeStyle(STYLE.chordColor, 2);
 
       let hspan = unit;
       let wspan = unit;
@@ -243,7 +245,7 @@
           this.fillOval(fingerX, fingerY, r, r);
         }
       }
-      return [max * unit, unit * 4]
+      return [max * unit, unit * 4];
     }
 
     drawBar(lyrics, chords, x, y, unit, careLyricsWidth) {
@@ -342,6 +344,8 @@
     for (let i=0; i<data.bars.length; i++) {
       let size = drawLine(backDrawer, data.lyrics[i], data.bars[i]);
       let $canvas = $(`<canvas width="${size[0]}" height="${size[1]}"></canvas>`).appendTo($lines);
+      $canvas.css('width', size[0]/2);
+      $canvas.css('height', size[1]/2);
       drawLine(new ChordDrawer($canvas[0]), data.lyrics[i], data.bars[i]);
     }
   };
