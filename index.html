@@ -141,10 +141,10 @@
     lyricsSize: 12,
     lyricsColor: '#222222',
     lyricsHeight: 20,
-    chordTextSize: 18,
+    chordTextSize: 16,
     chordTextColor: '#222222',
-    chordTextHeight: 22,
-    chordColor: '#222222',
+    chordTextHeight: 20,
+    chordColor: '#444444',
     chordUnit: 12,
     padding: 10,
     chordSpacing: 12,
@@ -215,31 +215,35 @@
       this.fillRect(0,0,width,height);
     }
 
-    drawChord(chord, x, y, w, h) {
+    drawChord(chord, x, y, unit) {
       this.strokeStyle(STYLE.chordColor);
 
-      let hspan = h / 4;
-      y += Math.floor(hspan/2);
-      for (let i = 0; i < 4; i++) {
-        this.line(x, y + hspan * i, x + w, y + hspan * i);
-      }
-
-      let wspan = w / 5;
-      for (let i = 0; i < 6; i++) {
-        this.line(x + wspan * i, y, x + wspan * i, y + hspan*3);
-      }
-      this.line(x + wspan * 0.1, y, x + wspan * 0.1, y + hspan*3);
-
+      let hspan = unit;
+      let wspan = unit;
       let fingers = getChord(chord);
+      let max = Math.max(3, Math.max(...fingers));
+      let lines = 4;
+
+      y += Math.floor(hspan/2);
+      for (let i = 0; i < lines; i++) {
+        this.line(x, y + hspan * i, x + max * unit, y + hspan * i);
+      }
+
+      for (let i = 0; i <= max; i++) {
+        this.line(x + wspan * i, y, x + wspan * i, y + hspan * 3);
+      }
+      this.line(x + wspan * 0.1, y, x + wspan * 0.1, y + hspan * 3);
+
       let r = (wspan * 0.7) / 2;
       this.fillStyle(STYLE.chordColor);
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < lines; i++) {
         if (fingers[i] > 0) {
           let fingerX = x - wspan / 2 + fingers[i] * wspan;
           let fingerY = y + i * hspan;
           this.fillOval(fingerX, fingerY, r, r);
         }
       }
+      return [max * unit, unit * 4]
     }
 
     drawBar(lyrics, chords, x, y, unit, careLyricsWidth) {
@@ -251,9 +255,9 @@
       x1 += unit;
       for (let i=0; i<chords.length; i++) {
         let lyricsWidth = this.text(lyrics[i]||'', x1, y1 + STYLE.lyricsSize, STYLE.lyricsSize);
-        this.text(chords[i], x1, y1 + STYLE.lyricsHeight + STYLE.chordTextSize, STYLE.chordTextSize);
-        this.drawChord(chords[i], x1, y1 + STYLE.lyricsHeight + STYLE.chordTextHeight, unit * 5, unit * 4);
-        x1 += Math.max(unit * 5, careLyricsWidth ? lyricsWidth : 0) + space;
+        let chordTextWidth = this.text(chords[i], x1, y1 + STYLE.lyricsHeight + STYLE.chordTextSize, STYLE.chordTextSize);
+        let chordWidth = this.drawChord(chords[i], x1, y1 + STYLE.lyricsHeight + STYLE.chordTextHeight, unit)[0];
+        x1 += Math.max(careLyricsWidth ? lyricsWidth : 0, chordTextWidth, chordWidth) + space;
       }
       return [x1 - x, y1 + STYLE.lyricsHeight + STYLE.chordTextHeight + unit*4 - y];
     }
@@ -297,16 +301,19 @@
     return result;
   };
 
-  let drawAllChords = (canvas, chord) => {
-    let chordDrawer = new ChordDrawer(canvas, 100, 100);
+  let getAllChords = (canvas, chord) => {
     let mains = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
     let suffix = ['', 'm', '7', 'm7', 'dim'];
 
+    let result = [];
     for (let i=0; i<mains.length; i++) {
+      let chords = []
       for (let j=0; j<suffix.length; j++) {
-        chordDrawer.drawChord(mains[i] + suffix[j], 10 + (100 + 20) * j, 10 + (60 + 20) *i, 100, 60);
+        chords.push(mains[i] + suffix[j]);
       }
+      result.push(chords);
     }
+    return result;
   };
 
   let drawLine = (chordDrawer, lyrics, bar) => {
