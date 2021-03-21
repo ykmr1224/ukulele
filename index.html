@@ -384,7 +384,7 @@
     let autoScrollButton = $('#autoScroll');
     autoScrollButton.on('change', () => {
       if (autoScrollButton.prop('checked')) {
-        autoScroll.start(1000, 10);
+        autoScroll.start(500, 5);
       } else {
         autoScroll.stop();
       }
