@@ -363,6 +363,7 @@
 
   let update = (title, chords) => {
     $(`#song-title`).html(title);
+    document.title = 'Ukulele: ' + title;
 
     let $lines = $('#lines');
     $lines.html('');
