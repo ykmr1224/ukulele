@@ -34,6 +34,11 @@
     <div id="lines"></div>
 </div>
 <div class="no-print">
+    <div class="btn-group-toggle" data-toggle="buttons">
+        <label class="btn btn-secondary">
+            <input type="checkbox" autocomplete="off" id="autoScroll"> Auto Scroll
+        </label>
+    </div>
     <hr>
     <form action="./index.html">
         <div class="form-group">
@@ -333,6 +338,21 @@
     return [x + STYLE.padding, y + STYLE.padding];
   };
 
+  class AutoScroll {
+    start(interval, unit) {
+      this.stop();
+      this.handle = window.setInterval(() => {
+        window.scrollBy(0, unit);
+      }, interval);
+    }
+    stop() {
+      if (this.handle !== undefined) {
+        window.clearInterval(this.handle);
+        this.handle = undefined;
+      }
+    }
+  }
+
   let update = (title, chords) => {
     let $lines = $('#lines');
     $lines.html('');
@@ -359,6 +379,16 @@
     $('#title').val(title);
 
     update(title, chords);
+
+    let autoScroll = new AutoScroll();
+    let autoScrollButton = $('#autoScroll');
+    autoScrollButton.on('change', () => {
+      if (autoScrollButton.prop('checked')) {
+        autoScroll.start(1000, 10);
+      } else {
+        autoScroll.stop();
+      }
+    });
   });
 </script>
 </body>
