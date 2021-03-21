@@ -31,14 +31,15 @@
 <body>
 <canvas id="backCanvas" width="0" height="0"></canvas>
 <div id="wrapper" style="background-color: white;">
-    <div id="lines"></div>
-</div>
-<div class="no-print">
-    <div class="btn-group-toggle" data-toggle="buttons">
-        <label class="btn btn-secondary">
+    <h2 id="song-title"></h2>
+    <div class="btn-group-toggle no-print" data-toggle="buttons">
+        <label class="btn btn-info">
             <input type="checkbox" autocomplete="off" id="autoScroll"> Auto Scroll
         </label>
     </div>
+    <div id="lines"></div>
+</div>
+<div class="no-print">
     <hr>
     <form action="./index.html">
         <div class="form-group">
@@ -143,7 +144,7 @@
   };
 
   const STYLE = {
-    bgColor: '#fffff',
+    bgColor: '#ffffff',
     lyricsSize: 24,
     lyricsColor: '#222222',
     lyricsHeight: 40,
@@ -156,17 +157,24 @@
     chordSpacing: 12,
   };
 
-  let deserializeChord = (chordString) => {
-    let result = [...DEFAULT_CHORD];
-    for (let i=0; i<4 && i<chordString.length; i++) {
-      result[i] = chordString[i] - '0';
+  class Chords {
+    static deserializeFingers(str) {
+      let result = [...DEFAULT_CHORD];
+      for (let i=0; i<4 && i<str.length; i++) {
+        result[i] = str[i] - '0';
+      }
+      return result;
     }
-    return result;
-  };
 
-  let getChord = (chord) => {
-    return deserializeChord(CHORDS[chord] || DEFAULT_CHORD);
-  };
+    static extractChord(chordStr) {
+      return chordStr.match(/^[A-Z][a-z0-9#]*/);
+    }
+
+    static get(chordStr) {
+      let chord = Chords.extractChord(chordStr);
+      return Chords.deserializeFingers(CHORDS[chord] || DEFAULT_CHORD);
+    }
+  }
 
   class Drawer {
     constructor(ctx) {
@@ -228,7 +236,7 @@
 
       let hspan = unit;
       let wspan = unit;
-      let fingers = getChord(chord);
+      let fingers = Chords.get(chord);
       let max = Math.max(3, Math.max(...fingers));
       let lines = 4;
 
@@ -294,7 +302,7 @@
     let lyrics = inputLyrics.trim().split('/');
     removeEmpty(lyrics);
     return $.map(lyrics, (input) => [input.split(',')]);
-  }
+  };
 
   let parseInput = (input) => {
     let lines = input.split('\n');
@@ -354,10 +362,10 @@
   }
 
   let update = (title, chords) => {
+    $(`#song-title`).html(title);
+
     let $lines = $('#lines');
     $lines.html('');
-
-    $(`<h2>${title}</h2>`).appendTo($lines);
 
     let data = parseInput(chords);
     let $backCanvas = $('#backCanvas');
