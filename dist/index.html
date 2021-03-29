@@ -1,0 +1,12 @@
+<html lang="en"><head><link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous"><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous"/><title>Ukulele</title><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"><style>body {
+            background-color: white;
+            padding: 10px;
+        }
+        canvas {
+            display: block;
+        }
+        @media print {
+            .no-print, .no-print * {
+                display: none !important;
+            }
+        }</style><script defer="defer" src="index_bundle.js"></script></head><body><canvas id="backCanvas" width="0" height="0"></canvas><div id="wrapper" style="background-color: white;"><h2 id="song-title"></h2><div class="btn-group-toggle no-print" data-toggle="buttons"><label class="btn btn-sm btn-info"><input type="checkbox" autocomplete="off" id="autoScroll"> Auto Scroll</label></div><div id="lines"></div></div><div class="no-print"><hr id="bottom"><form action="./index.html"><div class="form-group"><label for="title">Title:</label> <input class="form-control" placeholder="title" id="title" name="title"></div><div class="form-group"><label for="chords">Chords:</label> <textarea class="form-control" id="chords" rows="6" name="chords"></textarea></div><button type="submit" class="btn btn-primary">Submit</button></form></div></body></html>
