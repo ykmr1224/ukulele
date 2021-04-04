@@ -2,7 +2,9 @@ import ChordsParser from "./chords-parser";
 import ChordsStyle from "./chords-style";
 import ChordDrawer from "./chord-drawer";
 import AutoScroll from "./auto-scroll";
+import Chords from "./chords";
 import * as $ from 'jquery';
+import * as _ from 'lodash';
 
 let parser = new ChordsParser();
 let style = new ChordsStyle();
@@ -45,5 +47,9 @@ $(function () {
         } else {
             autoScroll.stop();
         }
+    });
+
+    _.each(Chords.getAllChords(), (chords) => {
+        console.log(chords.join(','));
     });
 });
